@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ja" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第3回：プレゼン構成とスライドの基本 - ハンズオンワークシート</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a',
+                        },
+                        success: {
+                            50: '#f0fdf4',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                        },
+                        accent: {
+                            100: '#f3e8ff',
+                            600: '#9333ea',
+                            700: '#7e22ce',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Noto Sans JP -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; }
+    </style>
+</head>
+<body class="min-h-full flex flex-col justify-between text-slate-800">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 py-4 px-6 sticky top-0 z-10 shadow-sm">
+        <div class="max-w-3xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-accent-600 text-white p-2 rounded-xl shadow-md">
+                    <i data-lucide="compass" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h1 class="text-sm font-black text-slate-900 tracking-tight">シン・キャリア・コンパス</h1>
+                    <p class="text-[10px] text-slate-500">第3回：プレゼン構成とスライドの基本（学生用ワークシート）</p>
+                </div>
+            </div>
+            <span class="text-[10px] bg-accent-100 text-accent-700 px-2.5 py-0.5 rounded-full font-bold">第3回 講義用</span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-3xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+        <!-- Top Banner -->
+        <div class="bg-gradient-to-r from-brand-900 to-slate-900 text-white p-5 rounded-2xl shadow-md relative overflow-hidden">
+            <div class="relative z-10">
+                <span class="bg-brand-500/30 text-brand-200 text-[10px] px-2 py-0.5 rounded-full font-bold border border-brand-500/20">Gemini壁打ちキャリア開拓</span>
+                <h2 class="text-base sm:text-lg font-black mt-1 mb-2">自分のスライド原案をAIに「診断・採点」してもらおう</h2>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    プレゼンで最も大切なのは、スライドに文字をギッシリ書くことではなく、あなたの言葉で前を向いて伝えること。
+                    まずはあなたの力で、3枚のスライドの下書き（ラフ案）をテキストで書いてみましょう。
+                    AIがあなたの原稿を「甘めに採点（診断）」し、スッキリとした「箇条書き（カンペ）」に修正してくれます！
+                </p>
+            </div>
+        </div>
+
+        <!-- WORK 3-1 -->
+        <section class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+            <div class="flex items-start gap-3 border-b border-slate-100 pb-3">
+                <div class="bg-accent-100 text-accent-700 p-2 rounded-lg">
+                    <i data-lucide="pen-tool" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-slate-950">✍️ ワーク3-1：スライド3枚分の「テキスト下書き」を書こう</h3>
+                    <p class="text-[11px] text-slate-500 mt-0.5">第1回・第2回で考えた内容をもとに、あなたが伝えたいことをまずは自分の言葉で自由に書いてみましょう。（※入力すると自動でGemini用プロンプトに反映されます）</p>
+                </div>
+            </div>
+
+            <!-- Inputs for 3 Slides -->
+            <div class="space-y-4">
+                <!-- Slide 1 -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2.5">
+                    <span class="text-xs font-bold text-accent-700 flex items-center gap-1">■ スライド1枚目：ビフォー（最初の夢と厳しい現実）</span>
+                    <div class="space-y-1.5">
+                        <label class="block text-[10px] font-bold text-slate-500">スライドの仮タイトル</label>
+                        <input type="text" id="slide1-title" oninput="updatePrompt()" class="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold focus:ring-1 focus:ring-brand-500" value="私が憧れた夢と直面した激戦の現実">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="block text-[10px] font-bold text-slate-500">このスライドで伝えたい中身（できるだけ簡潔な箇条書きで）</label>
+                        <textarea id="slide1-text" oninput="updatePrompt()" class="w-full h-16 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs focus:ring-1 focus:ring-brand-500" placeholder="例：
+・小さい頃から魚が大好きだった
+・水族館の飼育員になりたかったが、超激戦で諦めかけていた
+・自分の好きを活かす他の方法がないか迷っていた">・小さい頃から魚が大好きだった
+・水族館の飼育員になりたかったが、募集が極わずかで超激戦区だと知った
+・夢を追うのが怖くなってしまった</textarea>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2.5">
+                    <span class="text-xs font-bold text-accent-700 flex items-center gap-1">■ スライド2枚目：アフター（社会の裏側の「穴場職種」発見！）</span>
+                    <div class="space-y-1.5">
+                        <label class="block text-[10px] font-bold text-slate-500">スライドの仮タイトル</label>
+                        <input type="text" id="slide2-title" oninput="updatePrompt()" class="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold focus:ring-1 focus:ring-brand-500" value="発見した社会の裏側：地方公務員の「農業土木職」">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="block text-[10px] font-bold text-slate-500">このスライドで伝えたい中身（できるだけ簡潔な箇取り書きで）</label>
+                        <textarea id="slide2-text" oninput="updatePrompt()" class="w-full h-16 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs focus:ring-1 focus:ring-brand-500" placeholder="例：
+・AIと対話して「農業土木職」という仕事を知った
+・川や田んぼの魚がのぼれる水路をデザインして自然を守れる
+・倍率が低くて安定しており、公務員なので高待遇">・AIと対話する中で、公務員の「農業土木職」を発見した
+・川や田んぼの「魚がのぼれる水路」をデザインして自然を守れる
+・倍率が1〜2倍と低く、公務員なので安定していて高待遇</textarea>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2.5">
+                    <span class="text-xs font-bold text-accent-700 flex items-center gap-1">■ スライド3枚目：決意（これからの大学4年間の行動計画）</span>
+                    <div class="space-y-1.5">
+                        <label class="block text-[10px] font-bold text-slate-500">スライドの仮タイトル</label>
+                        <input type="text" id="slide3-title" oninput="updatePrompt()" class="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold focus:ring-1 focus:ring-brand-500" value="私がこの大学4年間で挑戦するアクション">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="block text-[10px] font-bold text-slate-500">このスライドで伝えたい中身（できるだけ簡潔な箇条書きで）</label>
+                        <textarea id="slide3-text" oninput="updatePrompt()" class="w-full h-16 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs focus:ring-1 focus:ring-brand-500" placeholder="例：
+・大学の授業で、環境保全や土木工学の基本を学ぶ
+・自治体の自然保全の現場を見るため、インターンに参加する
+・自分の「好き」をインフラとして活かす準備を進める">・大学の授業で、環境保全や土木工学の基本をしっかり学ぶ
+・夏休みを利用して、自然保全を行う自治体のインターンシップに参加する
+・実際の現場の仕事を見て理解を深める</textarea>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROMPT SECTION WITH COPY BUTTON -->
+        <section class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+            <div class="flex items-start gap-3">
+                <div class="bg-brand-100 text-brand-700 p-2 rounded-lg">
+                    <i data-lucide="terminal" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-slate-950">💬 Geminiに投げる「AI診断・採点プロンプト」</h3>
+                    <p class="text-[11px] text-slate-500 mt-0.5">上のあなたの下書きを含んだ、診断用の魔法の指示文です。コピーしてGeminiに送信しましょう！</p>
+                </div>
+            </div>
+
+            <!-- Custom Prompt Code Area with Floating Copy Button -->
+            <div class="relative bg-slate-950 rounded-xl p-4 border border-slate-800">
+                <!-- Floating Copy Button -->
+                <button onclick="copyPromptToClipboard()" class="absolute top-3 right-3 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-md transition active:scale-95">
+                    <i data-lucide="copy" id="copy-icon" class="w-3.5 h-3.5"></i>
+                    <span id="copy-text">コピー</span>
+                </button>
+
+                <!-- Prompt Content display -->
+                <pre class="text-[10px] sm:text-xs text-green-400 font-mono overflow-x-auto whitespace-pre-wrap leading-relaxed pr-16 select-all scrollbar-thin" id="prompt-code-block">
+読み込み中...</pre>
+            </div>
+
+            <div class="pt-2">
+                <button onclick="copyPromptToClipboard()" class="w-full bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold py-3.5 rounded-xl flex items-center justify-center gap-1.5 shadow-lg shadow-brand-100 transition active:scale-98">
+                    <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
+                    <span>診断プロンプトをコピーする（1タップ）</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- WORK 3-2 -->
+        <section class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+            <div class="flex items-start gap-3 border-b border-slate-100 pb-3">
+                <div class="bg-success-50 text-success-600 p-2 rounded-lg">
+                    <i data-lucide="bookmark-check" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-slate-950">✍️ ワーク3-2：AI先生の診断・採点結果をメモしよう</h3>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Geminiが優しく採点してくれた結果と、プロが削ってくれた「10文字以内の最強スライド」をここにメモして保存しましょう。</p>
+                </div>
+            </div>
+
+            <!-- Score display and memo -->
+            <div class="space-y-4">
+                <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <div class="w-24 shrink-0 text-center">
+                        <span class="block text-[10px] font-bold text-slate-400">Geminiの採点</span>
+                        <div class="flex items-baseline justify-center text-accent-700">
+                            <input type="number" id="memo-score" oninput="saveMemo()" class="w-14 text-center text-2xl font-black bg-white border border-slate-300 rounded-lg p-1 focus:ring-1 focus:ring-brand-500" placeholder="85">
+                            <span class="text-xs font-bold text-slate-500 ml-1">点</span>
+                        </div>
+                    </div>
+                    <div class="flex-grow space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-600">★ AI先生が褒めてくれたポイント・アドバイス</label>
+                        <textarea id="memo-advice" oninput="saveMemo()" class="w-full h-12 px-3 py-1 bg-white border border-slate-300 rounded-lg text-xs" placeholder="例：『水族館の飼育員を目指した時の葛藤がリアルに描かれており、次の農業土木への対比が美しく、ストーリー性がある』と褒められた！"></textarea>
+                    </div>
+                </div>
+
+                <!-- Final clean slides elements from AI -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                        <span class="text-xs font-bold text-slate-500 block">■ 決定稿：スライド1枚目</span>
+                        <input type="text" id="slide-1-title" oninput="saveMemo()" class="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold" placeholder="削られたタイトル">
+                        <textarea id="slide-1-bullets" oninput="saveMemo()" class="w-full h-16 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs" placeholder="削られた10文字以内の箇条書き3点"></textarea>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                        <span class="text-xs font-bold text-slate-500 block">■ 決定稿：スライド2枚目</span>
+                        <input type="text" id="slide-2-title" oninput="saveMemo()" class="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold" placeholder="削られたタイトル">
+                        <textarea id="slide-2-bullets" oninput="saveMemo()" class="w-full h-16 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs" placeholder="削られた10文字以内の箇条書き3点"></textarea>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                        <span class="text-xs font-bold text-slate-500 block">■ 決定稿：スライド3枚目</span>
+                        <input type="text" id="slide-3-title" oninput="saveMemo()" class="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold" placeholder="削られたタイトル">
+                        <textarea id="slide-3-bullets" oninput="saveMemo()" class="w-full h-16 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs" placeholder="削られた10文字以内の箇条書き3点"></textarea>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRESENTATION BASIC TIP -->
+        <section class="bg-accent-50 border border-accent-200 rounded-2xl p-5 space-y-3">
+            <div class="flex items-center gap-2 text-accent-700">
+                <i data-lucide="presentation" class="w-5 h-5"></i>
+                <h4 class="text-sm font-black">💡 【スライドはカンペ！】下を見ずに相手を圧倒する3つのルール</h4>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+                大学でありがちなのが、「スライドに原稿を丸写しして、それを暗い顔で丸読みする」発表。これでは誰も聞いてくれません。
+                スライドはあなたの最強の**「カンペ（次話すことの合図）」**にし、前を向いて堂々と話しましょう！
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                <div class="bg-white p-3 rounded-xl border border-accent-200/50 space-y-1">
+                    <span class="text-xs font-bold text-accent-700 flex items-center gap-1">① 文字はとにかくデカく！</span>
+                    <p class="text-[10px] text-slate-600 leading-relaxed">スライドに載せる文字は最小限。文字サイズは32pt以上推奨です。1枚につき箇条書きは3行、かつ一文は短く削りましょう。</p>
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-accent-200/50 space-y-1">
+                    <span class="text-xs font-bold text-accent-700 flex items-center gap-1">② 目で見てパッとわかる画像</span>
+                    <p class="text-[10px] text-slate-600 leading-relaxed">複雑な説明をする代わりに、一目見て「あ、こういうことね！」とわかる写真を画面の中央にデカデカと1枚配置するのがコツです。</p>
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-accent-200/50 space-y-1">
+                    <span class="text-xs font-bold text-accent-700 flex items-center gap-1">③ スライドが次の話を促す</span>
+                    <p class="text-[10px] text-slate-600 leading-relaxed">「スライドが変わる＝次のセリフへのバトン」です。手元の原稿を見る代わりに、スライドの大きな文字をヒントに自分の言葉で喋りましょう。</p>
+                </div>
+            </div>
+
+            <div class="bg-accent-100/50 rounded-lg p-3 text-[11px] text-accent-900 border-l-4 border-accent-500">
+                <strong>【隣の人と1分間リハゲーム！】</strong><br>
+                AI先生が短く整えてくれた決定稿箇条書き（ワーク3-2）を見せながら、物理的に姿勢をピシッと正し、<strong>一番後ろの壁に声をぶつけながら</strong>「このスライドは、〇〇についてです！」と、お互いに大きな声で発表し合ってみましょう！
+            </div>
+        </section>
+
+        <!-- Custom Toast Notifications (Success indicators) -->
+        <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-2 pointer-events-none"></div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-6 px-6 text-center border-t border-slate-800">
+        <p class="text-xs font-bold text-white mb-1">シン・キャリア・コンパス ハンズオンワークブック</p>
+        <p class="text-[10px] text-slate-500">本ページへの入力内容は、ブラウザを閉じるとリセットされます。メモした内容はご自身のプレゼン資料に控えておいてください。</p>
+    </footer>
+
+    <!-- Logic Script -->
+    <script>
+        window.onload = function() {
+            lucide.createIcons();
+            // Load temporarily saved data if exists in memory
+            loadMemo();
+            updatePrompt();
+        };
+
+        // Realtime prompt text generation
+        function updatePrompt() {
+            const s1t = document.getElementById('slide1-title').value.trim() || '私の憧れた夢と直面した激戦の現実';
+            const s1b = document.getElementById('slide1-text').value.trim() || '水族館の飼育員になりたいと思っていたが、現実は超激戦。';
+            const s2t = document.getElementById('slide2-title').value.trim() || '発見した社会の裏側：地方公務員の「農業土木職」';
+            const s2b = document.getElementById('slide2-text').value.trim() || '公務員の農業土木職を発見。魚道づくりで自然環境を守れ、安定している。';
+            const s3t = document.getElementById('slide3-title').value.trim() || '私がこの大学4年間で挑戦するアクション';
+            const s3b = document.getElementById('slide3-text').value.trim() || '大学の土木工学の授業を受け、自治体のインターンに参加する。';
+
+            const template = `あなたは、大学1年生向けプレゼンテーション指導のプロフェッショナルです。
+受講生が自力で考えた「3分プレゼンのスライド（3枚構成）テキスト」が入力されました。
+以下の条件に基づいて、彼のスライド案の【診断・採点】と【劇的に良くなる修正案】を出力してください。
+
+【受講生が作成した下書き（ラフ案）】
+■ スライド1枚目（ビフォー：直球の夢と過酷な現実）
+・スライドタイトル案： ${s1t}
+・伝えたいことの文章案：
+"${s1b}"
+
+■ スライド2枚目（アフター：社会の裏側の「穴場職種」発見）
+・スライドタイトル案： ${s2t}
+・伝えたいことの文章案：
+"${s2b}"
+
+■ スライド3枚目（決意：これからの大学4年間のアクション計画）
+・スライドタイトル案： ${s3t}
+・伝えたいことの文章案：
+"${s3b}"
+
+---
+
+【出力の条件・ルール】
+1. 【診断と採点】：
+   大学1年生が初めて作った構成として、「親しみやすく超前向きに、褒めちぎるスタイル（甘め評価）」で100点満点中何点かを出し、どこが素晴らしいかを解説してください。
+
+2. 【最強スライドへの削り（修正案）】：
+   「スライドに載せる文字は最小限にする」のがプロの鉄則です。
+   受講生が作った「伝えたいことの文章案」から本当に重要な部分を抜き出し、各スライド「1行10文字以内の箇条書き3行」の極限までスッキリした構成に修正してください。
+
+3. 【本番のセリフ原稿（カンペ）】：
+   修正した箇条書きのカンペスライドを見ながら、学生が実際に本番で姿勢良く読み上げる「セリフ」を、優しく熱い口調の日本語で作成してください（1枚につき、早口ではない約40秒〜50秒で喋れる量）。
+
+【出力フォーマット】
+以下の構成で優しく回答してください。
+
+■ 診断・採点結果
+・採点： [〇〇点 / 100点]
+・AI先生のアドバイス： [褒め言葉とアドバイスを優しく]
+
+■ スライド修正案＆セリフ原稿
+---
+・スライド1枚目：[修正された短いタイトル]
+[箇条書き3行（各行10文字以内！）]
+・1.
+・2.
+・3.
+[画像候補：こういうイメージの写真を真ん中に大きく貼るのがおすすめ]
+[喋るセリフ（カンペ原稿）：]
+---
+...（2枚目、3枚目も同様に）`;
+
+            document.getElementById('prompt-code-block').innerText = template;
+        }
+
+        // Custom Robust Mobile-friendly Copy function
+        function copyPromptToClipboard() {
+            const promptText = document.getElementById('prompt-code-block').innerText;
+            
+            const temp = document.createElement('textarea');
+            temp.value = promptText;
+            temp.style.position = 'fixed';
+            temp.style.left = '-9999px';
+            temp.style.top = '0';
+            temp.setAttribute('readonly', '');
+            document.body.appendChild(temp);
+            temp.select();
+            temp.setSelectionRange(0, 99999); // Mobile Safari support
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast("プロンプトをコピーしました！Geminiにそのまま貼り付けてください。", "success");
+                    triggerButtonSuccessAnimation();
+                } else {
+                    showToast("コピーに失敗しました。表示エリアを全選択してコピーしてください。", "error");
+                }
+            } catch (err) {
+                showToast("エラーによりコピーに失敗しました。お手数ですが手動でコピーしてください。", "error");
+            }
+            document.body.removeChild(temp);
+        }
+
+        function triggerButtonSuccessAnimation() {
+            const textEl = document.getElementById('copy-text');
+            const iconEl = document.getElementById('copy-icon');
+
+            textEl.innerText = 'コピー完了';
+            iconEl.setAttribute('data-lucide', 'check');
+            lucide.createIcons();
+
+            setTimeout(() => {
+                textEl.innerText = 'コピー';
+                iconEl.setAttribute('data-lucide', 'copy');
+                lucide.createIcons();
+            }, 3000);
+        }
+
+        // Custom Toast Box
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `flex items-center gap-3 p-4 rounded-xl shadow-lg border text-xs transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto`;
+            
+            if (type === 'success') {
+                toast.className += ` bg-white border-success-500/20 text-slate-800`;
+                toast.innerHTML = `<span class="bg-success-500 text-white p-1 rounded-full"><i data-lucide="check" class="w-3.5 h-3.5"></i></span> <span>${message}</span>`;
+            } else {
+                toast.className += ` bg-red-50 border-red-500/20 text-red-800`;
+                toast.innerHTML = `<span class="bg-red-500 text-white p-1 rounded-full"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i></span> <span>${message}</span>`;
+            }
+
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 50);
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Save session data temporarily in SessionStorage (so page refresh doesn't wipe hard work instantly)
+        function saveMemo() {
+            const s1_t = document.getElementById('slide1-title').value;
+            const s1_b = document.getElementById('slide1-text').value;
+            const s2_t = document.getElementById('slide2-title').value;
+            const s2_b = document.getElementById('slide2-text').value;
+            const s3_t = document.getElementById('slide3-title').value;
+            const s3_b = document.getElementById('slide3-text').value;
+
+            const score = document.getElementById('memo-score').value;
+            const advice = document.getElementById('memo-advice').value;
+
+            const s1_title = document.getElementById('slide-1-title').value;
+            const s1_bullets = document.getElementById('slide-1-bullets').value;
+            const s2_title = document.getElementById('slide-2-title').value;
+            const s2_bullets = document.getElementById('slide-2-bullets').value;
+            const s3_title = document.getElementById('slide-3-title').value;
+            const s3_bullets = document.getElementById('slide-3-bullets').value;
+
+            sessionStorage.setItem('career_s1_t_v3', s1_t);
+            sessionStorage.setItem('career_s1_b_v3', s1_b);
+            sessionStorage.setItem('career_s2_t_v3', s2_t);
+            sessionStorage.setItem('career_s2_b_v3', s2_b);
+            sessionStorage.setItem('career_s3_t_v3', s3_t);
+            sessionStorage.setItem('career_s3_b_v3', s3_b);
+
+            sessionStorage.setItem('career_score_v3', score);
+            sessionStorage.setItem('career_advice_v3', advice);
+
+            sessionStorage.setItem('career_s1_title_fix_v3', s1_title);
+            sessionStorage.setItem('career_s1_bullets_fix_v3', s1_bullets);
+            sessionStorage.setItem('career_s2_title_fix_v3', s2_title);
+            sessionStorage.setItem('career_s2_bullets_fix_v3', s2_bullets);
+            sessionStorage.setItem('career_s3_title_fix_v3', s3_title);
+            sessionStorage.setItem('career_s3_bullets_fix_v3', s3_bullets);
+        }
+
+        function loadMemo() {
+            const s1_t = sessionStorage.getItem('career_s1_t_v3');
+            const s1_b = sessionStorage.getItem('career_s1_b_v3');
+            const s2_t = sessionStorage.getItem('career_s2_t_v3');
+            const s2_b = sessionStorage.getItem('career_s2_b_v3');
+            const s3_t = sessionStorage.getItem('career_s3_t_v3');
+            const s3_b = sessionStorage.getItem('career_s3_b_v3');
+
+            const score = sessionStorage.getItem('career_score_v3');
+            const advice = sessionStorage.getItem('career_advice_v3');
+
+            const s1_title = sessionStorage.getItem('career_s1_title_fix_v3');
+            const s1_bullets = sessionStorage.getItem('career_s1_bullets_fix_v3');
+            const s2_title = sessionStorage.getItem('career_s2_title_fix_v3');
+            const s2_bullets = sessionStorage.getItem('career_s2_bullets_fix_v3');
+            const s3_title = sessionStorage.getItem('career_s3_title_fix_v3');
+            const s3_bullets = sessionStorage.getItem('career_s3_bullets_fix_v3');
+
+            if (s1_t) document.getElementById('slide1-title').value = s1_t;
+            if (s1_b) document.getElementById('slide1-text').value = s1_b;
+            if (s2_t) document.getElementById('slide2-title').value = s2_t;
+            if (s2_b) document.getElementById('slide2-text').value = s2_b;
+            if (s3_t) document.getElementById('slide3-title').value = s3_t;
+            if (s3_b) document.getElementById('slide3-text').value = s3_b;
+
+            if (score) document.getElementById('memo-score').value = score;
+            if (advice) document.getElementById('memo-advice').value = advice;
+
+            if (s1_title) document.getElementById('slide-1-title').value = s1_title;
+            if (s1_bullets) document.getElementById('slide-1-bullets').value = s1_bullets;
+            if (s2_title) document.getElementById('slide-2-title').value = s2_title;
+            if (s2_bullets) document.getElementById('slide-2-bullets').value = s2_bullets;
+            if (s3_title) document.getElementById('slide-3-title').value = s3_title;
+            if (s3_bullets) document.getElementById('slide-3-bullets').value = s3_bullets;
+        }
+    </script>
+</body>
+</html>
