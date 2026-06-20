@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ja" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第2回：社会の裏側（穴場職種）を探る - ハンズオンワークシート</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a',
+                        },
+                        success: {
+                            50: '#f0fdf4',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Noto Sans JP -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; }
+    </style>
+</head>
+<body class="min-h-full flex flex-col justify-between text-slate-800">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 py-4 px-6 sticky top-0 z-10 shadow-sm">
+        <div class="max-w-3xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-brand-600 text-white p-2 rounded-xl shadow-md">
+                    <i data-lucide="compass" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h1 class="text-sm font-black text-slate-900 tracking-tight">シン・キャリア・コンパス</h1>
+                    <p class="text-[10px] text-slate-500">第2回：社会の裏側（穴場職種）を探る（学生用ワークシート）</p>
+                </div>
+            </div>
+            <span class="text-[10px] bg-brand-100 text-brand-800 px-2.5 py-0.5 rounded-full font-bold">第2回 講義用</span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-3xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+        <!-- Top Banner -->
+        <div class="bg-gradient-to-r from-brand-900 to-slate-900 text-white p-5 rounded-2xl shadow-md relative overflow-hidden">
+            <div class="relative z-10">
+                <span class="bg-brand-500/30 text-brand-200 text-[10px] px-2 py-0.5 rounded-full font-bold border border-brand-500/20">Gemini壁打ちキャリア開拓</span>
+                <h2 class="text-base sm:text-lg font-black mt-1 mb-2">低倍率・高待遇な「大人の優良シート」を見つける</h2>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    世の中の仕事の9割は、普段目に見えない「インフラ」や「B2B（企業間取引）」で回っています。
+                    前回見つけた「好きな動詞」と「大人の条件（安定、ホワイト、低倍率）」を掛け合わせて、社会の裏側にある誰も知らないお宝職種を掘り起こしましょう！
+                </p>
+            </div>
+        </div>
+
+        <!-- WORK 2-1 -->
+        <section class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+            <div class="flex items-start gap-3 border-b border-slate-100 pb-3">
+                <div class="bg-brand-100 text-brand-700 p-2 rounded-lg">
+                    <i data-lucide="pen-tool" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-slate-950">✍️ ワーク2-1：あなたの「選んだ動詞」と「除外リスト」を入力しよう</h3>
+                    <p class="text-[11px] text-slate-500 mt-0.5">ここに入力すると、下部にあるGemini用プロンプトが自動であなた専用にカスタマイズされます！</p>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-500">1. あなたの好きなこと（名詞）</label>
+                        <input type="text" id="input-noun" oninput="updatePrompt()" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 text-xs font-medium" placeholder="例：魚" value="魚">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-500">2. 除外したい直球の職業（複数可・カンマ区切り）</label>
+                        <input type="text" id="input-exclude" oninput="updatePrompt()" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 text-xs font-medium" placeholder="例：水族館の飼育員, ペットショップ店員, 海洋学者" value="水族館の飼育員, ペットショップ店員, 海洋学者, 観賞魚のブリーダー">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-500">3. 前回選んだ動詞①</label>
+                        <input type="text" id="input-verb1" oninput="updatePrompt()" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 text-xs font-medium" placeholder="例：自然環境を保全する" value="自然環境を保全する">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-500">4. 前回選んだ動詞②</label>
+                        <input type="text" id="input-verb2" oninput="updatePrompt()" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 text-xs font-medium" placeholder="例：環境に適した空間をプロデュースする" value="環境に適した空間をプロデュースする">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROMPT SECTION WITH COPY BUTTON -->
+        <section class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+            <div class="flex items-start gap-3">
+                <div class="bg-brand-100 text-brand-700 p-2 rounded-lg">
+                    <i data-lucide="terminal" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-slate-950">💬 Geminiに投げる「魔法のプロンプト②」</h3>
+                    <p class="text-[11px] text-slate-500 mt-0.5">このプロンプトを1タップでコピーして、そのままGeminiに送信してください。</p>
+                </div>
+            </div>
+
+            <!-- Custom Prompt Code Area with Floating Copy Button -->
+            <div class="relative bg-slate-950 rounded-xl p-4 border border-slate-800">
+                <!-- Floating Copy Button -->
+                <button onclick="copyPromptToClipboard()" class="absolute top-3 right-3 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-md transition active:scale-95">
+                    <i data-lucide="copy" id="copy-icon" class="w-3.5 h-3.5"></i>
+                    <span id="copy-text">コピー</span>
+                </button>
+
+                <!-- Prompt Content display -->
+                <pre class="text-[10px] sm:text-xs text-green-400 font-mono overflow-x-auto whitespace-pre-wrap leading-relaxed pr-16 select-all scrollbar-thin animate-pulse-slow" id="prompt-code-block">
+読み込み中...</pre>
+            </div>
+
+            <div class="pt-2">
+                <button onclick="copyPromptToClipboard()" class="w-full bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold py-3.5 rounded-xl flex items-center justify-center gap-1.5 shadow-lg shadow-brand-100 transition active:scale-98">
+                    <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
+                    <span>プロンプトをコピーする（1タップ）</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- WORK 2-2 -->
+        <section class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+            <div class="flex items-start gap-3 border-b border-slate-100 pb-3">
+                <div class="bg-success-50 text-success-600 p-2 rounded-lg">
+                    <i data-lucide="bookmark-check" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-slate-950">✍️ ワーク2-2：発掘された穴場職種をメモしよう</h3>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Geminiの回答（5つの提案）の中から、あなたが一番「これ面白いかも！」と思ったものを1つ選んでメモしてください。</p>
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-600">★ あなたが選んだ「社会の裏側の穴場職種」</label>
+                    <input type="text" id="memo-job" oninput="saveMemo()" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-900" placeholder="例：地方公務員（農業土木職）">
+                </div>
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-600">★ なぜそこに惹かれた？（好きとの接点や、穴場な理由）</label>
+                    <textarea id="memo-point" oninput="saveMemo()" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs h-20" placeholder="例：魚が住む川をコンクリートで固めるのではなく、魚がのぼれる水路を自分で設計・整備できると知って、水族館の飼育員より根本から魚を守れると思ったから。さらに公務員なので安定していて倍率も低いのが最高。"></textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRESENTATION BASIC TIP -->
+        <section class="bg-brand-50 border border-brand-200 rounded-2xl p-5 space-y-3">
+            <div class="flex items-center gap-2 text-brand-800">
+                <i data-lucide="help-circle" class="w-5 h-5"></i>
+                <h4 class="text-sm font-black">💡 【大人の知恵】「川上」と「B2B」が最強な3つの理由</h4>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+                普段、私たちがお店で見る仕事（B2C）は全体のごく一部。社会を根本から支える「裏方の仕事」には、以下のような圧倒的なメリットがあります。
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                <div class="bg-white p-3 rounded-xl border border-brand-200/50 space-y-1">
+                    <span class="text-xs font-bold text-brand-700 flex items-center gap-1">① ライバルがいない</span>
+                    <p class="text-[10px] text-slate-600 leading-relaxed">「アパレル店員」は就活生に超人気。でも、糸や生地を作る「繊維B2B商社」は学生に知られていないため倍率が数分の一です。</p>
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-brand-200/50 space-y-1">
+                    <span class="text-xs font-bold text-brand-700 flex items-center gap-1">② 法律で仕事が守られる</span>
+                    <p class="text-[10px] text-slate-600 leading-relaxed">道路の設計や河川、水質管理の仕事は「法律でやるように」と国が決めているため、不況になっても会社が潰れません。</p>
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-brand-200/50 space-y-1">
+                    <span class="text-xs font-bold text-brand-700 flex items-center gap-1">③ 予算がケタ違い</span>
+                    <p class="text-[10px] text-slate-600 leading-relaxed">裏方のインフラの予算は数千万〜数十億円規模。自分のアイデアで社会をダイナミックに変えるやりがいがあります。</p>
+                </div>
+            </div>
+
+            <div class="bg-brand-100/50 rounded-lg p-3 text-[11px] text-brand-900 border-l-4 border-brand-500">
+                <strong>【おすそ分け紹介ゲーム！】</strong><br>
+                Geminiがくれた5つの穴場から1つ選び、<strong>「専門用語を使わずに、1文を短く切って」</strong>、その職種のすごさを隣の人に1分間でプレゼンしてみましょう！
+            </div>
+        </section>
+
+        <!-- Custom Toast Notifications (Success indicators) -->
+        <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-2 pointer-events-none"></div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-6 px-6 text-center border-t border-slate-800">
+        <p class="text-xs font-bold text-white mb-1">シン・キャリア・コンパス ハンズオンワークブック</p>
+        <p class="text-[10px] text-slate-500">本ページへの入力内容は、ブラウザを閉じるとリセットされます。メモした内容はご自身のノートなどに控えておいてください。</p>
+    </footer>
+
+    <!-- Logic Script -->
+    <script>
+        window.onload = function() {
+            lucide.createIcons();
+            // Load temporarily saved data if exists in memory
+            loadMemo();
+            updatePrompt();
+        };
+
+        // Realtime prompt text generation
+        function updatePrompt() {
+            const noun = document.getElementById('input-noun').value.trim() || '魚';
+            const exclude = document.getElementById('input-exclude').value.trim() || '水族館の飼育員, ペットショップ店員, 海洋学者, 観賞魚のブリーダー';
+            const verb1 = document.getElementById('input-verb1').value.trim() || '自然環境を保全する';
+            const verb2 = document.getElementById('input-verb2').value.trim() || '環境に適した空間をプロデュースする';
+
+            const template = `あなたは、大学1年生向けに「社会の裏側にある優良職種」を教える、非常に視野の広いキャリアプロフェッショナルです。
+
+私は「${noun}」に関わる、以下の2つのアプローチ（動詞）に興味があります。
+1. 「${verb1}」
+2. 「${verb2}」
+
+ただし、一般的に学生に人気があって誰もが思いつく直球の職業（例：${exclude}）は、倍率が高すぎて不安定なので、あえて「除外」したいと考えています。
+
+その代わりに、主な目的は「インフラ整備、社会の維持、産業の発展、ものづくり」など一見私の興味とは無関係に見えるけれど、業務プロセス、法律の義務、または役割において、私がやりたい上記の「2つの動詞」が裏方として絶対に必要とされる、意外な【穴場職種】を5つ提案してください。
+
+【条件】
+1. 「地方公務員（専門職など）」または「B2B（企業間取引）企業」の職種であること。
+2. 雇用が安定しており、学生からの知名度が低いため競争率が比較的低い（穴場）であること。
+3. なぜその仕事の中で「私の興味のある動詞」が役立つのか、その接点を優しく具体的に解説すること。
+4. なぜその仕事が「低倍率で安定している（大人の優良シート）」なのか、理由をリアルに教えて。
+
+【出力フォーマット】
+以下の構成で5つの穴場職種を提案してください。
+・職種名（例：地方公務員の「農業土木職」など、具体的に）
+・分類（例：地方公務員、B2Bメーカーなど）
+・「好き（動詞）」との意外な接点
+・なぜ穴場（低倍率・高待遇・安定）なのか`;
+
+            document.getElementById('prompt-code-block').innerText = template;
+        }
+
+        // Custom Robust Mobile-friendly Copy function
+        function copyPromptToClipboard() {
+            const promptText = document.getElementById('prompt-code-block').innerText;
+            
+            const temp = document.createElement('textarea');
+            temp.value = promptText;
+            temp.style.position = 'fixed';
+            temp.style.left = '-9999px';
+            temp.style.top = '0';
+            temp.setAttribute('readonly', '');
+            document.body.appendChild(temp);
+            temp.select();
+            temp.setSelectionRange(0, 99999); // Mobile Safari support
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast("プロンプトをコピーしました！Geminiにそのまま貼り付けてください。", "success");
+                    triggerButtonSuccessAnimation();
+                } else {
+                    showToast("コピーに失敗しました。表示エリアを全選択してコピーしてください。", "error");
+                }
+            } catch (err) {
+                showToast("エラーによりコピーに失敗しました。お手数ですが手動でコピーしてください。", "error");
+            }
+            document.body.removeChild(temp);
+        }
+
+        function triggerButtonSuccessAnimation() {
+            const textEl = document.getElementById('copy-text');
+            const iconEl = document.getElementById('copy-icon');
+
+            textEl.innerText = 'コピー完了';
+            iconEl.setAttribute('data-lucide', 'check');
+            lucide.createIcons();
+
+            setTimeout(() => {
+                textEl.innerText = 'コピー';
+                iconEl.setAttribute('data-lucide', 'copy');
+                lucide.createIcons();
+            }, 3000);
+        }
+
+        // Custom Toast Box
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `flex items-center gap-3 p-4 rounded-xl shadow-lg border text-xs transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto`;
+            
+            if (type === 'success') {
+                toast.className += ` bg-white border-success-500/20 text-slate-800`;
+                toast.innerHTML = `<span class="bg-success-500 text-white p-1 rounded-full"><i data-lucide="check" class="w-3.5 h-3.5"></i></span> <span>${message}</span>`;
+            } else {
+                toast.className += ` bg-red-50 border-red-500/20 text-red-800`;
+                toast.innerHTML = `<span class="bg-red-500 text-white p-1 rounded-full"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i></span> <span>${message}</span>`;
+            }
+
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 50);
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Save session data temporarily in SessionStorage (so page refresh doesn't wipe hard work instantly)
+        function saveMemo() {
+            const noun = document.getElementById('input-noun').value;
+            const exclude = document.getElementById('input-exclude').value;
+            const verb1 = document.getElementById('input-verb1').value;
+            const verb2 = document.getElementById('input-verb2').value;
+            const job = document.getElementById('memo-job').value;
+            const point = document.getElementById('memo-point').value;
+
+            sessionStorage.setItem('career_noun_v2', noun);
+            sessionStorage.setItem('career_exclude_v2', exclude);
+            sessionStorage.setItem('career_verb1_v2', verb1);
+            sessionStorage.setItem('career_verb2_v2', verb2);
+            sessionStorage.setItem('career_memo_job_v2', job);
+            sessionStorage.setItem('career_memo_point_v2', point);
+        }
+
+        function loadMemo() {
+            const noun = sessionStorage.getItem('career_noun_v2');
+            const exclude = sessionStorage.getItem('career_exclude_v2');
+            const verb1 = sessionStorage.getItem('career_verb1_v2');
+            const verb2 = sessionStorage.getItem('career_verb2_v2');
+            const job = sessionStorage.getItem('career_memo_job_v2');
+            const point = sessionStorage.getItem('career_memo_point_v2');
+
+            if (noun) document.getElementById('input-noun').value = noun;
+            if (exclude) document.getElementById('input-exclude').value = exclude;
+            if (verb1) document.getElementById('input-verb1').value = verb1;
+            if (verb2) document.getElementById('input-verb2').value = verb2;
+            if (job) document.getElementById('memo-job').value = job;
+            if (point) document.getElementById('memo-point').value = point;
+        }
+    </script>
+</body>
+</html>
