@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>将棋指導対局チケットジェネレーター</title>
+    <title>将棋指導対局チケットジェネレーター（3連・控え付き）</title>
     <!-- Tailwind CSS for UI styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts for traditional Japanese feeling -->
@@ -14,34 +14,47 @@
             background-color: #f3f4f6;
         }
 
+        /* Responsive Wrapper for Mobile Preview */
+        #preview-wrapper {
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center; /* Swapped dynamically to flex-start in JS for mobile */
+            align-items: flex-start;
+            padding: 10px 0;
+            box-sizing: border-box;
+        }
+
         /* A4 Page styling for preview */
         .a4-page {
             background: white;
             width: 210mm;
             height: 297mm;
             padding: 15mm 10mm;
-            margin: 0 auto 10mm auto;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
             box-sizing: border-box;
             position: relative;
             page-break-after: always;
+            transform-origin: top left; /* Solidified origin to top-left to prevent dynamic overflow */
+            flex-shrink: 0;
         }
 
-        /* Ticket styling */
+        /* 3-Part Ticket styling */
         .ticket-container {
             width: 190mm;
-            height: 51mm; /* 5 tickets fit perfectly in 297mm height with margins */
+            height: 50mm; /* Fits 5 tickets on A4 with 15mm top/bottom margins */
             border: 1.5px solid #2d2d2d;
             margin-bottom: 4mm;
             box-sizing: border-box;
             display: flex;
             background-color: #ffffff;
             position: relative;
-            /* Thin, elegant Shogi board grid background */
+            /* Thin, elegant Shogi board grid background WITH bottom-left to top-right wood-gold gradient */
             background-image: 
-                linear-gradient(rgba(200, 200, 200, 0.15) 1px, transparent 1px), 
-                linear-gradient(90deg, rgba(200, 200, 200, 0.15) 1px, transparent 1px);
-            background-size: 9.5mm 9.5mm;
+                linear-gradient(rgba(140, 140, 140, 0.28) 1.8px, transparent 1.8px), 
+                linear-gradient(90deg, rgba(140, 140, 140, 0.28) 1.8px, transparent 1.8px),
+                linear-gradient(45deg, rgba(242, 230, 202, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
+            background-size: 9.5mm 9.5mm, 9.5mm 9.5mm, 100% 100%;
             background-position: center;
             overflow: hidden;
         }
@@ -51,12 +64,26 @@
             margin-bottom: 0;
         }
 
-        /* Left Main Ticket */
-        .ticket-main {
-            width: 74%;
+        /* Part 1: Left Organizer Stub (控え欄 - 31% width to prevent cutoff) */
+        .ticket-organizer {
+            width: 31%;
             height: 100%;
-            border-right: 2px dashed #a1a1a1;
-            padding: 5mm 6mm;
+            border-right: 1.5px dashed #888;
+            padding: 4mm 3mm;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            background-color: rgba(245, 247, 250, 0.95);
+        }
+
+        /* Part 2: Center Main Ticket (本券 - 49% width) */
+        .ticket-main {
+            width: 49%;
+            height: 100%;
+            border-right: 1.5px dashed #888;
+            padding: 4mm 4.5mm;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
@@ -64,17 +91,17 @@
             position: relative;
         }
 
-        /* Right Stub (半券) */
+        /* Part 3: Right User Stub (半券 - 20% width) */
         .ticket-stub {
-            width: 26%;
+            width: 20%;
             height: 100%;
-            padding: 5mm 4mm;
+            padding: 4mm 3mm;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             position: relative;
-            background-color: rgba(254, 253, 249, 0.9);
+            background-color: rgba(254, 253, 249, 0.95);
         }
 
         /* Elegant Shogi style font */
@@ -94,28 +121,29 @@
             border-radius: 4px;
             background-color: rgba(255, 255, 255, 0.9);
             box-shadow: inset 0 0 1px rgba(185, 28, 28, 0.2);
-            /* Added slight grunge/traditional texture simulation */
             text-shadow: 0.5px 0.5px 0px rgba(185, 28, 28, 0.2);
-            line-height: 1; /* Reset line-height to let flex alignment work perfectly */
+            line-height: 1;
         }
 
         /* Print Media Styles: hides UI entirely, outputs only A4 sheets */
         @media print {
             body {
-                background-color: white;
-                margin: 0;
-                padding: 0;
+                background-color: white !important;
+                margin: 0 !important;
+                padding: 0 !important;
             }
             .no-print {
                 display: none !important;
             }
             .a4-page {
-                box-shadow: none;
-                margin: 0;
-                padding: 15mm 10mm;
-                width: 210mm;
-                height: 297mm;
-                page-break-after: always;
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 15mm 10mm !important;
+                width: 210mm !important;
+                height: 297mm !important;
+                page-break-after: always !important;
+                display: block !important;
+                transform: scale(1) !important; /* Ensure 100% scale on actual printing */
             }
             /* Make sure backgrounds print */
             * {
@@ -134,10 +162,11 @@
                 <span class="text-2xl">☖</span>
                 <div>
                     <h1 class="text-lg font-bold leading-tight">将棋指導対局チケットジェネレーター</h1>
-                    <p class="text-xs text-slate-400">A4ぴったり印刷・はんこ個別微調整版</p>
+                    <p class="text-xs text-slate-400">3連式（主催者控え ＋ 本券 ＋ 回収半券）A4対応版</p>
                 </div>
             </div>
-            <button onclick="window.print()" class="bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-semibold px-6 py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-all flex items-center gap-2">
+            <!-- Improved action: Calls safe print function -->
+            <button onclick="printTickets()" class="bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-semibold px-6 py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-all flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-3a2 2 0 00-2-2H9a2 2 0 00-2 2v3a2 2 0 002 2zm0 0V9a2 2 0 012-2h6a2 2 0 012 2v10m-6-10a2 2 0 00-2 2v3a2 2 0 002 2h2a2 2 0 002-2v-3a2 2 0 00-2-2H9z" />
                 </svg>
@@ -149,8 +178,8 @@
     <!-- Main Workspace (Hidden on print except for preview) -->
     <div class="flex-1 flex flex-col lg:flex-row max-w-7xl w-full mx-auto p-4 lg:p-6 gap-6">
         
-        <!-- Controls Sidebar -->
-        <aside class="no-print w-full lg:w-80 bg-white p-5 rounded-xl shadow-md border border-slate-200 self-start space-y-5">
+        <!-- Controls Sidebar (FIXED: w-full lg:w-[350px] flex-shrink-0 to guarantee sidebar width and prevent preview cutoffs) -->
+        <aside class="no-print w-full lg:w-[350px] flex-shrink-0 bg-white p-5 rounded-xl shadow-md border border-slate-200 self-start space-y-5">
             <h2 class="text-md font-bold text-slate-800 border-b border-slate-200 pb-2 flex items-center gap-2">
                 <span class="text-red-600">⚙</span> 設定項目
             </h2>
@@ -163,41 +192,60 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">主催者名（上段）</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">主催者名</label>
                     <input type="text" id="input-org" value="逢坂児童クラブ将棋連盟" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">代表者名（下段）</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">代表者名</label>
                     <input type="text" id="input-president" value="会長 高倉英彦" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">はんこの文字</label>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">はんこ内の文字</label>
                         <input type="text" id="input-stamp" value="高" maxlength="2" class="w-full px-3 py-2 border border-slate-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">はんこのサイズ</label>
                         <select id="input-stamp-size" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
-                            <option value="small" selected>小さい (1/3サイズ)</option>
-                            <option value="medium">普通</option>
-                            <option value="large">大きい</option>
+                            <option value="small" selected>小さい (約12mm)</option>
+                            <option value="medium">普通 (約18mm)</option>
+                            <option value="large">大きい (約24mm)</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- UPDATED: Dynamic Font Size Range Slider up to 4.0x -->
+                <!-- Dynamic Font Size Range Slider (Expanded max to 4.0) -->
                 <div>
                     <div class="flex justify-between items-center mb-1">
                         <label class="block text-xs font-semibold text-slate-600">はんこ内の文字の大きさ</label>
-                        <span id="stamp-scale-val" class="text-xs font-semibold text-red-600 font-mono">1.0倍 (最小)</span>
+                        <span id="stamp-scale-val" class="text-xs font-semibold text-red-600 font-mono">1.2倍</span>
                     </div>
-                    <input type="range" id="input-stamp-font-scale" min="1.0" max="4.0" step="0.1" value="1.0" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-red-600">
+                    <input type="range" id="input-stamp-font-scale" min="1.0" max="4.0" step="0.1" value="1.2" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-red-600">
                     <div class="flex justify-between text-[10px] text-slate-400 px-0.5 mt-0.5">
                         <span>標準(1.0倍)</span>
-                        <span>中(2.5倍)</span>
+                        <span>倍(2.5倍)</span>
                         <span>最大(4.0倍)</span>
+                    </div>
+                </div>
+
+                <!-- Stub Items Customization -->
+                <div class="pt-2 border-t border-slate-100">
+                    <h3 class="text-xs font-bold text-slate-700 mb-2">【左側・控え】の記入欄項目</h3>
+                    <div class="space-y-2">
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-500 mb-0.5">項目1（名前欄など）</label>
+                            <input type="text" id="input-stub-item1" value="お名前：" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-md text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-500 mb-0.5">項目2（日付欄など）</label>
+                            <input type="text" id="input-stub-item2" value="発行日：2026年  月  日" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-md text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-500 mb-0.5">項目3（金額・担当など）</label>
+                            <input type="text" id="input-stub-item3" value="領収額：￥" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-md text-xs">
+                        </div>
                     </div>
                 </div>
 
@@ -225,19 +273,48 @@
             </div>
         </aside>
 
-        <!-- Live Preview Area -->
-        <main class="flex-1 flex flex-col items-center overflow-auto bg-slate-200 p-4 rounded-xl border border-slate-300">
+        <!-- Live Preview Area (FIXED: flex-1 allows dynamic scaling and proper centering relative to parent container) -->
+        <main class="flex-1 flex flex-col items-center bg-slate-200 p-4 rounded-xl border border-slate-300 overflow-hidden">
             <div class="no-print self-stretch flex items-center justify-between mb-4 px-2">
-                <h3 class="text-sm font-semibold text-slate-700">A4印刷プレビュー（1枚に5つ配置）</h3>
+                <h3 class="text-sm font-semibold text-slate-700">A4印刷プレビュー（3連切り取り対応・5枚配置）</h3>
                 <span class="text-xs bg-slate-300 text-slate-800 px-2 py-1 rounded font-mono" id="page-count-badge">Page: 1/2</span>
             </div>
             
-            <!-- This container holds actual A4 page sheets -->
-            <div id="preview-pages-container" class="scale-90 md:scale-100 origin-top transition-transform duration-200">
-                <!-- Pages will be rendered dynamically via Javascript -->
+            <!-- This wrapper controls responsive dynamic scaling inside mobile screen size -->
+            <div id="preview-wrapper" class="w-full">
+                <!-- Specify fixed width for container to calculate transforms with zero error margin -->
+                <div id="preview-pages-container" class="w-[794px] transition-all duration-200">
+                    <!-- Pages will be rendered dynamically via Javascript -->
+                </div>
             </div>
         </main>
 
+    </div>
+
+    <!-- Help Modal for Sandboxed / Blocked Print environments -->
+    <div id="help-modal" class="no-print fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-200">
+            <div class="flex items-center gap-3 text-amber-600">
+                <span class="text-3xl">⚠️</span>
+                <h3 class="text-lg font-bold text-slate-950">印刷機能が制限されています</h3>
+            </div>
+            <p class="text-sm text-slate-600 leading-relaxed">
+                現在、当サイトの保護されたプレビュー画面（iframe）内でお使いのため、ブラウザによって自動印刷機能がブロックされています。
+            </p>
+            <div class="bg-slate-50 p-4 rounded-xl text-xs text-slate-700 space-y-2 border border-slate-200">
+                <p class="font-bold text-slate-900">🔔 1分でできる解決手順</p>
+                <ol class="list-decimal pl-4 space-y-1.5 text-slate-600 font-medium">
+                    <li>右上の <span class="bg-slate-200 px-1.5 py-0.5 rounded font-mono text-slate-800">⬇️ ダウンロード</span> ボタン（下向き矢印）を押して、このファイルを保存します。</li>
+                    <li>保存したファイル（<span class="font-mono bg-slate-200 px-1 rounded">shogi_ticket_generator_with_stub.html</span>）をご自身のパソコンやスマホで開きます。</li>
+                    <li>開いた画面で「印刷する」ボタンを押すと、<b>100%確実に印刷・PDF保存の画面が起動します！</b></li>
+                </ol>
+            </div>
+            <div class="flex justify-end pt-2">
+                <button onclick="closeHelpModal()" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm px-5 py-2.5 rounded-lg transition-all">
+                    閉じる
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- App Script & Rendering Logic -->
@@ -254,6 +331,13 @@
         const inputCount = document.getElementById('input-count');
         const previewContainer = document.getElementById('preview-pages-container');
         const pageCountBadge = document.getElementById('page-count-badge');
+        const helpModal = document.getElementById('help-modal');
+        const previewWrapper = document.getElementById('preview-wrapper');
+
+        // Stub customization inputs
+        const inputStubItem1 = document.getElementById('input-stub-item1');
+        const inputStubItem2 = document.getElementById('input-stub-item2');
+        const inputStubItem3 = document.getElementById('input-stub-item3');
 
         // Render tickets based on current input values
         function renderTickets() {
@@ -267,8 +351,12 @@
             const startNo = parseInt(inputStartNo.value, 10) || 1;
             const totalCount = parseInt(inputCount.value, 10) || 10;
 
+            const stubItem1 = inputStubItem1.value;
+            const stubItem2 = inputStubItem2.value;
+            const stubItem3 = inputStubItem3.value;
+
             // Display current scale in the sidebar UI
-            stampScaleVal.textContent = `${fontScale.toFixed(1)}倍` + (fontScale === 1.0 ? ' (最小)' : '');
+            stampScaleVal.textContent = `${fontScale.toFixed(1)}倍` + (fontScale === 1.0 ? ' (最小)' : '') + (fontScale === 4.0 ? ' (最大)' : '');
 
             // Base font sizing definitions in points (pt)
             let baseFontSize = 8;
@@ -276,16 +364,16 @@
 
             // Determine Stamp dimensions (Hanko outer border container box)
             let stampClass = "w-[12mm] h-[12mm] border-[1.5px]"; // Small Default (1/3 size)
-            let stubStampClass = "w-[10mm] h-[10mm] border-[1.2px]";
+            let stubStampClass = "w-[9mm] h-[9mm] border-[1px]";
             
             if (stampSizeOption === "medium") {
-                stampClass = "w-[18mm] h-[18mm] border-[2px]";
-                stubStampClass = "w-[14mm] h-[14mm] border-[1.5px]";
+                stampClass = "w-[17mm] h-[17mm] border-[2px]";
+                stubStampClass = "w-[13mm] h-[13mm] border-[1.5px]";
                 baseFontSize = 12;
                 baseStubFontSize = 9;
             } else if (stampSizeOption === "large") {
-                stampClass = "w-[24mm] h-[24mm] border-[2.5px]";
-                stubStampClass = "w-[18mm] h-[18mm] border-[2px]";
+                stampClass = "w-[22mm] h-[22mm] border-[2.5px]";
+                stubStampClass = "w-[17mm] h-[17mm] border-[2px]";
                 baseFontSize = 18;
                 baseStubFontSize = 12;
             }
@@ -316,28 +404,53 @@
 
                     const ticketHTML = `
                         <div class="ticket-container">
-                            <!-- Main Ticket (Left Side) -->
+                            <!-- Part 1: Organizer Stub (左側・控え欄) -->
+                            <div class="ticket-organizer">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-[#a32a2a] text-[10pt] font-bold font-serif select-none">${formattedNo}</span>
+                                    <span class="text-[8pt] font-semibold text-slate-500 shogi-font">主催者控え</span>
+                                </div>
+                                
+                                <!-- Hand-writing fields or reference fields -->
+                                <div class="my-auto space-y-2.5">
+                                    <div class="border-b border-dashed border-slate-400 pb-1">
+                                        <span class="text-[8.5pt] text-slate-700 font-bold block whitespace-nowrap overflow-hidden">${stubItem1}</span>
+                                    </div>
+                                    <div class="border-b border-dashed border-slate-400 pb-1">
+                                        <span class="text-[8.5pt] text-slate-700 font-bold block whitespace-nowrap overflow-hidden">${stubItem2}</span>
+                                    </div>
+                                    <div class="border-b border-dashed border-slate-400 pb-1">
+                                        <span class="text-[8.5pt] text-slate-700 font-bold block whitespace-nowrap overflow-hidden">${stubItem3}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-[7pt] text-slate-400 text-center select-none border-t border-slate-200 pt-1">
+                                    ※切り離して保管してください
+                                </div>
+                            </div>
+
+                            <!-- Part 2: Main Ticket (中央・本券) -->
                             <div class="ticket-main">
                                 <!-- Top Row: Serial Number -->
-                                <div class="text-[#a32a2a] text-[13pt] font-extrabold font-serif tracking-wide select-none">
+                                <div class="text-[#a32a2a] text-[12pt] font-extrabold font-serif tracking-wide select-none">
                                     ${formattedNo}
                                 </div>
                                 
                                 <!-- Center Row: Large elegant title -->
                                 <div class="text-center w-full z-10">
-                                    <h2 class="shogi-font font-extrabold text-[28pt] text-slate-900 tracking-[0.25em] pl-[0.25em] select-none leading-none">
+                                    <h2 class="shogi-font font-extrabold text-[24pt] text-slate-900 tracking-[0.25em] pl-[0.25em] select-none leading-none">
                                         ${title}
                                     </h2>
                                 </div>
                                 
                                 <!-- Bottom Row: Issuer info & Hanko aligned side-by-side on the right -->
-                                <div class="flex items-center justify-end gap-3 w-full mt-auto">
+                                <div class="flex items-center justify-end gap-2.5 w-full mt-auto">
                                     <!-- Issuer Text (Stacked & aligned right) -->
                                     <div class="text-right flex flex-col justify-center leading-tight">
-                                        <span class="shogi-font text-[9.5pt] font-semibold text-slate-700 tracking-wider">
+                                        <span class="shogi-font text-[8.5pt] font-semibold text-slate-700 tracking-wider">
                                             ${orgName}
                                         </span>
-                                        <span class="shogi-font text-[12pt] font-bold text-slate-900 tracking-wide mt-0.5">
+                                        <span class="shogi-font text-[11pt] font-bold text-slate-900 tracking-wide mt-0.5">
                                             ${presidentName}
                                         </span>
                                     </div>
@@ -348,27 +461,27 @@
                                 </div>
                             </div>
                             
-                            <!-- Stub Ticket (Right Side) -->
+                            <!-- Part 3: Stub Ticket (右側・半券) -->
                             <div class="ticket-stub">
                                 <!-- Top Row: Stub Serial Number -->
-                                <div class="text-[#a32a2a] text-[10.5pt] font-bold font-serif select-none">
+                                <div class="text-[#a32a2a] text-[9.5pt] font-bold font-serif select-none">
                                     ${formattedNo}
                                 </div>
                                 
                                 <!-- Stub Main Content -->
-                                <div class="text-center mt-2">
-                                    <div class="shogi-font font-bold text-[14pt] text-slate-800 leading-tight">
+                                <div class="text-center mt-1.5">
+                                    <div class="shogi-font font-bold text-[12pt] text-slate-800 leading-tight">
                                         ${title}
                                     </div>
-                                    <div class="shogi-font font-semibold text-[11pt] text-slate-600 mt-0.5">
+                                    <div class="shogi-font font-semibold text-[10pt] text-slate-600 mt-0.5">
                                         半 券
                                     </div>
                                 </div>
                                 
                                 <!-- Stub Footer (Recovery Note & Small Stamp aligned) -->
                                 <div class="flex items-end justify-between w-full mt-auto">
-                                    <span class="text-[7.5pt] text-slate-500 font-semibold mb-1 select-none">
-                                        当日受付にて回収
+                                    <span class="text-[7pt] text-slate-500 font-semibold mb-0.5 leading-tight select-none">
+                                        当日受付<br>にて回収
                                     </span>
                                     <!-- Stub Hanko Seal with dynamic font-size -->
                                     <div class="hanko-stamp ${stubStampClass}" style="font-size: ${stubStampFontSize}pt;">
@@ -383,17 +496,81 @@
 
                 previewContainer.appendChild(pageDiv);
             }
+
+            // Automatically resize preview window to fit user's mobile screen width perfectly!
+            resizePreview();
+        }
+
+        /**
+         * Dynamic Rescale Engine
+         * Detects A4 physical paper width (210mm in pixels, roughly ~794px at standard display DPI)
+         * and shrinks the viewport gracefully to fit mobile/tablet screen widths without cutting off any elements.
+         */
+        function resizePreview() {
+            const wrapperWidth = previewWrapper.clientWidth;
+            const a4WidthInPixels = 794; // Explicitly locked width of the #preview-pages-container
+            
+            const pages = previewContainer.querySelectorAll('.a4-page');
+            if (pages.length === 0) return;
+
+            if (wrapperWidth < a4WidthInPixels) {
+                const scaleRatio = wrapperWidth / a4WidthInPixels;
+                
+                // Set the correct left-aligned origin for iframe preview and scale dynamically
+                previewContainer.style.transform = `scale(${scaleRatio})`;
+                previewContainer.style.transformOrigin = 'top left';
+                
+                // Align to flex-start dynamically on narrow viewports to avoid left/center clipping bugs
+                previewWrapper.style.justifyContent = 'flex-start';
+                
+                // Adjust parent height dynamically to prevent large empty space under scaled elements
+                const pageHeight = 1122; // ~297mm height in pixels
+                const gap = 10; // Margin between pages (10px transformed)
+                previewWrapper.style.height = `${(pageHeight * scaleRatio + gap) * pages.length}px`;
+            } else {
+                // Desktop or wider views: restore original center alignment and spacing
+                previewContainer.style.transform = 'none';
+                previewWrapper.style.height = 'auto';
+                previewWrapper.style.justifyContent = 'center';
+            }
+        }
+
+        /**
+         * Triggers printing.
+         * First, attempts direct window.print() (most robust inside native browser windows).
+         * If the environment blocks it (common in chat sandboxed iframes), it gracefully displays the rescue popup guide.
+         */
+        function printTickets() {
+            try {
+                // Try initiating standard browser print directly
+                window.print();
+            } catch (e) {
+                // If it fails, open our custom modal help guide
+                showHelpModal();
+            }
+        }
+
+        function showHelpModal() {
+            helpModal.classList.remove('hidden');
+        }
+
+        function closeHelpModal() {
+            helpModal.classList.add('hidden');
         }
 
         // Attach event listeners to render on input changes
         [
             inputTitle, inputOrg, inputPresident, 
             inputStamp, inputStampSize, inputStampFontScale, 
-            inputStartNo, inputCount
+            inputStartNo, inputCount,
+            inputStubItem1, inputStubItem2, inputStubItem3
         ].forEach(element => {
             element.addEventListener('input', renderTickets);
             element.addEventListener('change', renderTickets);
         });
+
+        // Re-calculate scales on window resize to ensure responsiveness
+        window.addEventListener('resize', resizePreview);
 
         // Initialize first render
         window.onload = function() {
