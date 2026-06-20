@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ja" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第1回：好きの因数分解 - ハンズオンワークシート</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a',
+                        },
+                        success: {
+                            50: '#f0fdf4',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Noto Sans JP -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; }
+    </style>
+</head>
+<body class="min-h-full flex flex-col justify-between text-slate-800">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 py-4 px-6 sticky top-0 z-10 shadow-sm">
+        <div class="max-w-3xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-amber-500 text-white p-2 rounded-xl shadow-md">
+                    <i data-lucide="compass" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h1 class="text-sm font-black text-slate-900 tracking-tight">シン・キャリア・コンパス</h1>
+                    <p class="text-[10px] text-slate-500">第1回：好きの因数分解（学生用ワークシート）</p>
+                </div>
+            </div>
+            <span class="text-[10px] bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full font-bold">第1回 講義用</span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-3xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+        <!-- Top Banner -->
+        <div class="bg-gradient-to-r from-brand-900 to-slate-900 text-white p-5 rounded-2xl shadow-md relative overflow-hidden">
+            <div class="relative z-10">
+                <span class="bg-brand-500/30 text-brand-200 text-[10px] px-2 py-0.5 rounded-full font-bold border border-brand-500/20">Gemini壁打ちキャリア開拓</span>
+                <h2 class="text-base sm:text-lg font-black mt-1 mb-2">「なりたい職業（名詞）」から「好きな行動（動詞）」へ</h2>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    水族館の飼育員やアパレル店員などの直球の職業は、やりがい搾取や低待遇、超激戦になりがち。
+                    まずはあなたの「好き」をバラバラの「行動（動詞）」に因数分解し、大人の穴場ルートをハックする準備を始めましょう！
+                </p>
+            </div>
+        </div>
+
+        <!-- WORK 1-1 -->
+        <section class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+            <div class="flex items-start gap-3 border-b border-slate-100 pb-3">
+                <div class="bg-amber-100 text-amber-700 p-2 rounded-lg">
+                    <i data-lucide="pen-tool" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-slate-950">✍️ ワーク1-1：あなたの「好き」と「夢」を入力しよう</h3>
+                    <p class="text-[11px] text-slate-500 mt-0.5">ここに入力すると、下部にあるGemini用プロンプトが自動であなた専用にカスタマイズされます！</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-500">1. あなたの「好きなこと（名詞）」</label>
+                    <input type="text" id="input-noun" oninput="updatePrompt()" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-xs font-medium" placeholder="例：魚" value="魚">
+                </div>
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-500">2. 今真っ先に思い浮かぶ「直球の職業」</label>
+                    <input type="text" id="input-dream" oninput="updatePrompt()" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-xs font-medium" placeholder="例：水族館の飼育員" value="水族館の飼育員">
+                </div>
+            </div>
+        </section>
+
+        <!-- PROMPT SECTION WITH COPY BUTTON -->
+        <section class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+            <div class="flex items-start gap-3 justify-between">
+                <div class="flex items-start gap-3">
+                    <div class="bg-brand-100 text-brand-700 p-2 rounded-lg">
+                        <i data-lucide="terminal" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-950">💬 Geminiに投げる「魔法のプロンプト①」</h3>
+                        <p class="text-[11px] text-slate-500 mt-0.5">下のプロンプトを1タップでコピーして、そのままGeminiに送信してください。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Custom Prompt Code Area with Floating Copy Button -->
+            <div class="relative bg-slate-950 rounded-xl p-4 border border-slate-800">
+                <!-- Floating Copy Button -->
+                <button onclick="copyPromptToClipboard()" class="absolute top-3 right-3 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-md transition active:scale-95">
+                    <i data-lucide="copy" id="copy-icon" class="w-3.5 h-3.5"></i>
+                    <span id="copy-text">コピー</span>
+                </button>
+
+                <!-- Prompt Content display -->
+                <pre class="text-[10px] sm:text-xs text-green-400 font-mono overflow-x-auto whitespace-pre-wrap leading-relaxed pr-16 select-all scrollbar-thin" id="prompt-code-block">
+あなたは、大学1年生向けの親しみやすいプロのキャリアアドバイザーです。
+私は今、自分の将来のキャリアについて考えています。
+
+私のピュアな「好きなこと」は、名詞で表すと「魚」です。
+これに関連して、いま思い浮かぶ直球の職業は「水族館の飼育員」です。
+
+この私の「好き（名詞）」を、他の様々な業界や仕事でも応用できるような、5つの「抽象的な行動（動詞や関わり方）」に分解して教えてください。
+（例えば「魚」なら、「自然環境を保全する」「生態系のデータを収集・分析する」「魚を安定して市場に流通させる」といったイメージです）
+
+また、それとは別に、私が思いついた直球の職業（水族館の飼育員）以外で、一般的に誰もが思いつく「激戦区の直球の仕事」をさらに4つリストアップして教えてください。
+
+【出力フォーマット】
+1. あなたの「好き」を分解した5つの動詞（それぞれ150文字程度で、どんなワクワクがあるか優しく解説してね）
+2. 避けるべき「激戦区の直球の仕事」5つ（あなたが挙げたもの1つ ＋ AIが考えた4つ）</pre>
+            </div>
+
+            <div class="pt-2">
+                <button onclick="copyPromptToClipboard()" class="w-full bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold py-3.5 rounded-xl flex items-center justify-center gap-1.5 shadow-lg shadow-brand-100 transition active:scale-98">
+                    <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
+                    <span>プロンプトをコピーする（1タップ）</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- WORK 1-2 -->
+        <section class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+            <div class="flex items-start gap-3 border-b border-slate-100 pb-3">
+                <div class="bg-success-50 text-success-600 p-2 rounded-lg">
+                    <i data-lucide="bookmark-check" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-slate-950">✍️ ワーク1-2：Geminiの回答から惹かれた動詞をメモ</h3>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Geminiが教えてくれた5つの動詞のうち、「これ面白いかも！」と思うものを2つ選んで書き込みましょう。</p>
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-600">★ 選んだ動詞①</label>
+                    <input type="text" id="memo-verb-1" oninput="saveMemo()" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs" placeholder="例：生態系や水環境データを収集して保全する">
+                </div>
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-600">★ 選んだ動詞②</label>
+                    <input type="text" id="memo-verb-2" oninput="saveMemo()" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs" placeholder="例：生き物が住みやすい空間をデザイン・整備する">
+                </div>
+            </div>
+        </section>
+
+        <!-- PRESENTATION BASIC TIP -->
+        <section class="bg-amber-50 border border-amber-200 rounded-2xl p-5 space-y-3">
+            <div class="flex items-center gap-2 text-amber-800">
+                <i data-lucide="megaphone" class="w-5 h-5"></i>
+                <h4 class="text-sm font-black">🗣️ 【第1回プレゼン超基本】話す以前の「身体づくり」</h4>
+            </div>
+            <p class="text-xs text-amber-950 leading-relaxed">
+                人前で話すときに上手く喋ろうとする必要はありません。まずは以下の「3大姿勢・発声ルール」だけで堂々として見え、相手への伝わり方が100倍変わります！
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                <div class="bg-white p-3 rounded-xl border border-amber-200/50 space-y-1">
+                    <span class="text-xs font-bold text-amber-800 flex items-center gap-1">① 姿勢は肩幅！</span>
+                    <p class="text-[10px] text-slate-600 leading-relaxed">足を肩幅に開き、胸を張ると勝手に喉が開き、自然に大きな声が出ます。</p>
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-amber-200/50 space-y-1">
+                    <span class="text-xs font-bold text-amber-800 flex items-center gap-1">② 声は一番後ろの壁へ！</span>
+                    <p class="text-[10px] text-slate-600 leading-relaxed">目の前の人ではなく、「教室の一番後ろの壁」に声をぶつける感覚で喋りましょう。</p>
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-amber-200/50 space-y-1">
+                    <span class="text-xs font-bold text-amber-800 flex items-center gap-1">③ 相手のおでこを見る！</span>
+                    <p class="text-[10px] text-slate-600 leading-relaxed">目が合うと緊張するので、聞いている人の「おでこ」や「鼻」をぼんやり見ます。</p>
+                </div>
+            </div>
+
+            <div class="bg-amber-100/50 rounded-lg p-3 text-[11px] text-amber-900 border-l-4 border-amber-500">
+                <strong>【隣の人と1分間ゲーム！】</strong><br>
+                姿勢を正し、一番後ろの壁に届く声でお互いのおでこを見ながら、<strong>「自分が好きなこと」と「選んだ2つの動詞」</strong>を、隣の人に元気に1分間で紹介してみましょう！
+            </div>
+        </section>
+
+        <!-- Custom Toast Notifications (Success indicators) -->
+        <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-2 pointer-events-none"></div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-6 px-6 text-center border-t border-slate-800">
+        <p class="text-xs font-bold text-white mb-1">シン・キャリア・コンパス ハンズオンワークブック</p>
+        <p class="text-[10px] text-slate-500">本ページへの入力内容は、ブラウザを閉じるとリセットされます。メモした内容はご自身のノートなどに控えておいてください。</p>
+    </footer>
+
+    <!-- Logic Script -->
+    <script>
+        window.onload = function() {
+            lucide.createIcons();
+            // Load temporarily saved data if exists in memory
+            loadMemo();
+            updatePrompt();
+        };
+
+        // Realtime prompt text generation
+        function updatePrompt() {
+            const noun = document.getElementById('input-noun').value.trim() || '魚';
+            const dream = document.getElementById('input-dream').value.trim() || '水族館の飼育員';
+
+            const template = `あなたは、大学1年生向けの親しみやすいプロのキャリアアドバイザーです。
+私は今、自分の将来のキャリアについて考えています。
+
+私のピュアな「好きなこと」は、名詞で表すと「${noun}」です。
+これに関連して、いま思い浮かぶ直球の職業は「${dream}」です。
+
+この私の「好き（名詞）」を、他の様々な業界や仕事でも応用できるような、5つの「抽象的な行動（動詞や関わり方）」に分解して教えてください。
+（例えば「魚」なら、「自然環境を保全する」「生態系のデータを収集・分析する」「魚を安定して市場に流通させる」といったイメージです）
+
+また、それとは別に、私が思いついた直球の職業（${dream}）以外で、一般的に誰もが思いつく「激戦区の直球の仕事」をさらに4つリストアップして教えてください。
+
+【出力フォーマット】
+1. あなたの「好き」を分解した5つの動詞（それぞれ150文字程度で、どんなワクワクがあるか優しく解説してね）
+2. 避けるべき「激戦区の直球の仕事」5つ（あなたが挙げたもの1つ ＋ AIが考えた4つ）`;
+
+            document.getElementById('prompt-code-block').innerText = template;
+        }
+
+        // Custom Robust Mobile-friendly Copy function
+        function copyPromptToClipboard() {
+            const promptText = document.getElementById('prompt-code-block').innerText;
+            
+            const temp = document.createElement('textarea');
+            temp.value = promptText;
+            temp.style.position = 'fixed';
+            temp.style.left = '-9999px';
+            temp.style.top = '0';
+            temp.setAttribute('readonly', '');
+            document.body.appendChild(temp);
+            temp.select();
+            temp.setSelectionRange(0, 99999); // Mobile Safari support
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast("プロンプトをコピーしました！Geminiにそのまま貼り付けてください。", "success");
+                    triggerButtonSuccessAnimation();
+                } else {
+                    showToast("コピーに失敗しました。表示エリアを全選択してコピーしてください。", "error");
+                }
+            } catch (err) {
+                showToast("エラーによりコピーに失敗しました。お手数ですが手動でコピーしてください。", "error");
+            }
+            document.body.removeChild(temp);
+        }
+
+        function triggerButtonSuccessAnimation() {
+            const textEl = document.getElementById('copy-text');
+            const iconEl = document.getElementById('copy-icon');
+
+            textEl.innerText = 'コピー完了';
+            iconEl.setAttribute('data-lucide', 'check');
+            lucide.createIcons();
+
+            setTimeout(() => {
+                textEl.innerText = 'コピー';
+                iconEl.setAttribute('data-lucide', 'copy');
+                lucide.createIcons();
+            }, 3000);
+        }
+
+        // Custom Toast Box
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `flex items-center gap-3 p-4 rounded-xl shadow-lg border text-xs transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto`;
+            
+            if (type === 'success') {
+                toast.className += ` bg-white border-success-500/20 text-slate-800`;
+                toast.innerHTML = `<span class="bg-success-500 text-white p-1 rounded-full"><i data-lucide="check" class="w-3.5 h-3.5"></i></span> <span>${message}</span>`;
+            } else {
+                toast.className += ` bg-red-50 border-red-500/20 text-red-800`;
+                toast.innerHTML = `<span class="bg-red-500 text-white p-1 rounded-full"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i></span> <span>${message}</span>`;
+            }
+
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 50);
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Save session data temporarily in SessionStorage (so page refresh doesn't wipe hard work instantly)
+        function saveMemo() {
+            const verb1 = document.getElementById('memo-verb-1').value;
+            const verb2 = document.getElementById('memo-verb-2').value;
+            sessionStorage.setItem('career_verb_1', verb1);
+            sessionStorage.setItem('career_verb_2', verb2);
+        }
+
+        function loadMemo() {
+            const v1 = sessionStorage.getItem('career_verb_1');
+            const v2 = sessionStorage.getItem('career_verb_2');
+            if (v1) document.getElementById('memo-verb-1').value = v1;
+            if (v2) document.getElementById('memo-verb-2').value = v2;
+        }
+    </script>
+</body>
+</html>
