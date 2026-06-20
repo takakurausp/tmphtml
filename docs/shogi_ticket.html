@@ -42,9 +42,9 @@
         /* 3-Part Ticket styling */
         .ticket-container {
             width: 190mm;
-            height: 50mm; /* Fits 5 tickets on A4 with 15mm top/bottom margins */
+            height: 48mm; /* Reduced from 50mm to secure absolute safety margins and prevent page overflow */
             border: 1.5px solid #2d2d2d;
-            margin-bottom: 4mm;
+            margin-bottom: 3.5mm; /* Reduced from 4mm */
             box-sizing: border-box;
             display: flex;
             background-color: #ffffff;
@@ -64,12 +64,12 @@
             margin-bottom: 0;
         }
 
-        /* Part 1: Left Organizer Stub (控え欄 - 31% width to prevent cutoff) */
+        /* Part 1: Left Organizer Stub (控え欄) */
         .ticket-organizer {
             width: 31%;
             height: 100%;
             border-right: 1.5px dashed #888;
-            padding: 4mm 3mm;
+            padding: 3.5mm 3mm;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
@@ -78,12 +78,12 @@
             background-color: rgba(245, 247, 250, 0.95);
         }
 
-        /* Part 2: Center Main Ticket (本券 - 49% width) */
+        /* Part 2: Center Main Ticket (本券) */
         .ticket-main {
             width: 49%;
             height: 100%;
             border-right: 1.5px dashed #888;
-            padding: 4mm 4.5mm;
+            padding: 3.5mm 4.5mm;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
@@ -91,11 +91,11 @@
             position: relative;
         }
 
-        /* Part 3: Right User Stub (半券 - 20% width) */
+        /* Part 3: Right User Stub (半券) */
         .ticket-stub {
             width: 20%;
             height: 100%;
-            padding: 4mm 3mm;
+            padding: 3.5mm 3mm;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
@@ -140,10 +140,13 @@
                 margin: 0 !important;
                 padding: 15mm 10mm !important;
                 width: 210mm !important;
-                height: 297mm !important;
+                height: auto !important; /* Dynamically let the height expand naturally to avoid blank page bugs */
                 page-break-after: always !important;
                 display: block !important;
                 transform: scale(1) !important; /* Ensure 100% scale on actual printing */
+            }
+            .a4-page:last-child {
+                page-break-after: avoid !important; /* Prevent extra blank page at the end of the document */
             }
             /* Make sure backgrounds print */
             * {
@@ -178,7 +181,7 @@
     <!-- Main Workspace (Hidden on print except for preview) -->
     <div class="flex-1 flex flex-col lg:flex-row max-w-7xl w-full mx-auto p-4 lg:p-6 gap-6">
         
-        <!-- Controls Sidebar (FIXED: w-full lg:w-[350px] flex-shrink-0 to guarantee sidebar width and prevent preview cutoffs) -->
+        <!-- Controls Sidebar -->
         <aside class="no-print w-full lg:w-[350px] flex-shrink-0 bg-white p-5 rounded-xl shadow-md border border-slate-200 self-start space-y-5">
             <h2 class="text-md font-bold text-slate-800 border-b border-slate-200 pb-2 flex items-center gap-2">
                 <span class="text-red-600">⚙</span> 設定項目
@@ -216,7 +219,7 @@
                     </div>
                 </div>
 
-                <!-- Dynamic Font Size Range Slider (Expanded max to 4.0) -->
+                <!-- Dynamic Font Size Range Slider -->
                 <div>
                     <div class="flex justify-between items-center mb-1">
                         <label class="block text-xs font-semibold text-slate-600">はんこ内の文字の大きさ</label>
@@ -273,7 +276,7 @@
             </div>
         </aside>
 
-        <!-- Live Preview Area (FIXED: flex-1 allows dynamic scaling and proper centering relative to parent container) -->
+        <!-- Live Preview Area -->
         <main class="flex-1 flex flex-col items-center bg-slate-200 p-4 rounded-xl border border-slate-300 overflow-hidden">
             <div class="no-print self-stretch flex items-center justify-between mb-4 px-2">
                 <h3 class="text-sm font-semibold text-slate-700">A4印刷プレビュー（3連切り取り対応・5枚配置）</h3>
