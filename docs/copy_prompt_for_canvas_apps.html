@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第3回ハンズオン：プロトタイプ構想プロンプトジェネレーター</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <!-- ヘッダー -->
+    <header class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-md py-6 px-4">
+        <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div>
+                <span class="bg-emerald-500/30 text-emerald-100 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                    Step 1: アイデアの壁打ち
+                </span>
+                <h1 class="text-2xl md:text-3xl font-bold mt-2">オリジナルアプリ構想プロンプト</h1>
+                <p class="text-emerald-100 text-sm mt-1">
+                    アイデアを選択、または自分で入力するだけで、Geminiに送るための最適なプロンプトがすぐに作成・コピーできます。
+                </p>
+            </div>
+            <!-- アイコン/バッジ -->
+            <div class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg backdrop-blur-sm text-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-300 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <span>1-Click コピー対応</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="max-w-4xl w-full mx-auto px-4 py-8 flex-grow">
+        
+        <!-- ガイドライン -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-8 flex items-start gap-4">
+            <div class="p-3 bg-emerald-50 text-emerald-600 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+            </div>
+            <div>
+                <h2 class="text-lg font-bold text-slate-800">使い方</h2>
+                <ol class="list-decimal list-inside text-slate-600 text-sm mt-2 space-y-1">
+                    <li>下にある<strong>「A: アイデアの選択・入力」</strong>で、作りたいアプリのイメージに最も近いものを選びます。</li>
+                    <li>自分の好みに合わせて内容をカスタマイズしたい場合は、テキストボックスを直接編集します。</li>
+                    <li>画面下部の<strong>「プロンプトをコピーする」</strong>をクリックし、Geminiのチャット欄に貼り付けて送信してください！</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- セクションA: アイデア選択 -->
+        <section class="mb-8">
+            <h3 class="text-lg font-bold text-slate-700 mb-4 flex items-center gap-2">
+                <span class="flex items-center justify-center bg-teal-600 text-white w-6 h-6 rounded-full text-xs font-bold">A</span>
+                作りたいアプリのアイデアを選択または入力
+            </h3>
+
+            <!-- プリセットカード -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <!-- アイデア 1 -->
+                <button type="button" onclick="selectPreset(1)" id="preset-1" class="preset-btn text-left p-4 rounded-xl border-2 bg-white transition-all duration-200 shadow-sm hover:shadow hover:border-teal-500">
+                    <div class="flex items-start justify-between">
+                        <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">吸光度・グラフ</span>
+                        <div class="check-icon opacity-0 text-teal-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-sm font-semibold text-slate-800 mt-2">吸光度データの自動グラフ化</p>
+                    <p class="text-xs text-slate-500 mt-1 line-clamp-2">毎日CSVで出力される吸光度のデータを読み込んで、平均値を出し、綺麗なグラフにして保存したい</p>
+                </button>
+
+                <!-- アイデア 2 -->
+                <button type="button" onclick="selectPreset(2)" id="preset-2" class="preset-btn text-left p-4 rounded-xl border-2 bg-white transition-all duration-200 shadow-sm hover:shadow hover:border-teal-500">
+                    <div class="flex items-start justify-between">
+                        <span class="text-xs font-bold text-teal-600 bg-teal-50 px-2.5 py-1 rounded-full">論文要約・Gemini API</span>
+                        <div class="check-icon opacity-0 text-teal-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-sm font-semibold text-slate-800 mt-2">英語論文の構造化日本語要約</p>
+                    <p class="text-xs text-slate-500 mt-1 line-clamp-2">論文のAbstract（英語）をコピペすると、Gemini APIを使って自動で「背景・方法・結果・結論」に構造化して日本語要約してくれるツール</p>
+                </button>
+
+                <!-- アイデア 3 -->
+                <button type="button" onclick="selectPreset(3)" id="preset-3" class="preset-btn text-left p-4 rounded-xl border-2 bg-white transition-all duration-200 shadow-sm hover:shadow hover:border-teal-500">
+                    <div class="flex items-start justify-between">
+                        <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">遺伝子解析・FASTA</span>
+                        <div class="check-icon opacity-0 text-teal-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-sm font-semibold text-slate-800 mt-2">未知配列の機能自動解説ツール</p>
+                    <p class="text-xs text-slate-500 mt-1 line-clamp-2">実験で得られた未知の遺伝子配列（FASTA形式）を入力すると、Gemini APIがその配列の一般的な機能や関連する代謝経路について解説を自動生成してくれるアプリ</p>
+                </button>
+
+                <!-- アイデア 4 -->
+                <button type="button" onclick="selectPreset(4)" id="preset-4" class="preset-btn text-left p-4 rounded-xl border-2 bg-white transition-all duration-200 shadow-sm hover:shadow hover:border-teal-500">
+                    <div class="flex items-start justify-between">
+                        <span class="text-xs font-bold text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full">顕微鏡画像・解析</span>
+                        <div class="check-icon opacity-0 text-teal-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-sm font-semibold text-slate-800 mt-2">顕微鏡画像レポート生成補助</p>
+                    <p class="text-xs text-slate-500 mt-1 line-clamp-2">顕微鏡の画像ファイルをアップロードすると、Gemini API（マルチモーダル機能）が画像内の異常な細胞や変化を文章で説明してくれるレポート作成補助ツール</p>
+                </button>
+            </div>
+
+            <!-- カスタム編集フィールド -->
+            <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+                <label for="custom-idea" class="block text-sm font-semibold text-slate-700 mb-2">
+                    💡 アイデアを自由にカスタマイズ（変更するとプロンプトに即時反映されます）
+                </label>
+                <textarea id="custom-idea" rows="3" oninput="updatePrompt()" class="w-full text-sm border border-slate-300 rounded-lg p-3 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all resize-none" placeholder="ここに自分のアイデアを入力、または上記のカードから選んで編集してください。"></textarea>
+                <div class="flex items-center justify-between mt-2">
+                    <p class="text-xs text-slate-400">※ここに書いた内容が自動的に下記テンプレートの【作りたいアプリのアイデア】に差し替わります。</p>
+                    <button type="button" onclick="resetToCustom()" class="text-xs font-medium text-slate-500 hover:text-red-500 transition-colors">クリア</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクションB: プロンプトのプレビューとコピー -->
+        <section>
+            <h3 class="text-lg font-bold text-slate-700 mb-4 flex items-center justify-between">
+                <span class="flex items-center gap-2">
+                    <span class="flex items-center justify-center bg-teal-600 text-white w-6 h-6 rounded-full text-xs font-bold">B</span>
+                    生成されたプロンプト
+                </span>
+                <span class="text-xs font-normal text-slate-500 bg-slate-100 px-2 py-0.5 rounded">編集可</span>
+            </h3>
+
+            <!-- プレビューボックス -->
+            <div class="relative bg-slate-900 rounded-xl shadow-lg overflow-hidden border border-slate-800">
+                <div class="flex items-center justify-between px-4 py-2 bg-slate-800 text-slate-400 text-xs border-b border-slate-700/50">
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+                        <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+                        <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+                        <span class="ml-2 font-mono">prompt_template.txt</span>
+                    </div>
+                    <span>Text</span>
+                </div>
+                
+                <textarea id="prompt-preview" rows="14" class="w-full bg-slate-900 text-slate-100 font-mono text-xs md:text-sm p-5 focus:outline-none resize-y leading-relaxed border-none rounded-b-xl focus:ring-0"></textarea>
+
+                <!-- フローティング コピーボタン -->
+                <div class="absolute bottom-4 right-4">
+                    <button type="button" onclick="copyPrompt()" class="flex items-center gap-2 px-6 py-3 bg-teal-600 hover:bg-teal-500 text-white font-semibold rounded-lg shadow-md transition-all duration-150 transform hover:-translate-y-0.5 active:translate-y-0">
+                        <!-- コピーアイコン -->
+                        <svg xmlns="http://www.w3.org/2000/svg" id="copy-icon" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                        </svg>
+                        <!-- チェックマークアイコン（コピー成功時用・初期非表示） -->
+                        <svg xmlns="http://www.w3.org/2000/svg" id="check-icon" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span id="button-text">プロンプトをコピーする</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- コピートースト通知 -->
+    <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-xs md:text-sm px-6 py-3 rounded-xl shadow-xl flex items-center gap-2 border border-slate-700 opacity-0 transition-all duration-300 pointer-events-none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+        </svg>
+        <span>クリップボードにコピーしました！そのままGeminiのチャット欄に貼り付けてください。</span>
+    </div>
+
+    <!-- フッター -->
+    <footer class="bg-slate-100 text-slate-500 py-6 border-t border-slate-200 text-center text-xs mt-12">
+        <div class="max-w-4xl mx-auto px-4">
+            <p>© 2026 第3回オリジナルアプリの構想とプロトタイプ開発ハンズオン</p>
+            <p class="mt-1">ブラウザ上で動くプロトタイプ作成のために最適化されたツールです。</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript 制御ロジック -->
+    <script>
+        // プリセットデータの定義
+        const presets = {
+            1: "毎日CSVで出力される吸光度のデータを読み込んで、平均値を出し、綺麗なグラフ（Chart.js等を利用）にして保存したいです。また、基準値を超えた異常値をハイライトする機能も欲しいです。",
+            2: "論文のAbstract（英語）をコピペすると、Gemini APIを使って自動で「背景・方法・結果・結論」に構造化して日本語要約してくれるツールを作りたいです。",
+            3: "実験で得られた未知の遺伝子配列（FASTA形式）を入力すると、Gemini APIがその配列の一般的な機能や、KEGG/MetaCycなどに関連する代謝経路について推測・解説を生成してくれるアプリを作りたいです。",
+            4: "顕微鏡の画像ファイル（PNGやJPG）をドラッグ＆ドロップでアップロードすると、Gemini API（マルチモーダル機能）が画像内の異常な細胞や変化を解析し、その所見をまとめた簡易レポートを文章で説明・評価してくれるレポート作成補助ツールを作りたいです。"
+        };
+
+        const basePromptTemplate = (idea) => {
+            return `私は生物系の大学院生です。私の研究・作業を楽にするために、ブラウザで動く1つのHTMLアプリを作りたいです。
+
+【作りたいアプリのアイデア】
+${idea}
+
+このアイデアを実現するために、必要な機能を3〜4つのステップに「要素分解」して提案してください。
+また、私が気づいていない懸念点や、より便利にするためのアイデア（Plotly.jsなどの便利なJSライブラリや、Gemini APIの具体的な活用方法の提案など）があれば教えてください。`;
+        };
+
+        let currentSelectedId = null;
+
+        // 初期ロード
+        window.addEventListener('DOMContentLoaded', () => {
+            // 初期状態ではアイデア1をプリセット選択状態にする
+            selectPreset(1);
+        });
+
+        // プリセットを選択したときの処理
+        function selectPreset(id) {
+            currentSelectedId = id;
+            
+            // プリセットボタンのアクティブ・非アクティブのスタイリング調整
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.classList.remove('border-teal-600', 'bg-teal-50/20');
+                btn.classList.add('border-slate-200', 'bg-white');
+                btn.querySelector('.check-icon').classList.add('opacity-0');
+            });
+
+            const activeBtn = document.getElementById(`preset-${id}`);
+            activeBtn.classList.add('border-teal-600', 'bg-teal-50/20');
+            activeBtn.classList.remove('border-slate-200', 'bg-white');
+            activeBtn.querySelector('.check-icon').classList.remove('opacity-0');
+
+            // テキストエリアの更新
+            const selectedText = presets[id];
+            document.getElementById('custom-idea').value = selectedText;
+
+            // 最終プロンプトの更新
+            updatePrompt();
+        }
+
+        // 手動でカスタムテキストをクリアしたときの処理
+        function resetToCustom() {
+            document.getElementById('custom-idea').value = '';
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.classList.remove('border-teal-600', 'bg-teal-50/20');
+                btn.classList.add('border-slate-200', 'bg-white');
+                btn.querySelector('.check-icon').classList.add('opacity-0');
+            });
+            currentSelectedId = null;
+            updatePrompt();
+        }
+
+        // カスタムテキスト編集や選択変更に合わせて、下のプロンプトプレビューを書き換える
+        function updatePrompt() {
+            const customIdeaText = document.getElementById('custom-idea').value.trim();
+            const ideaContent = customIdeaText || "[ここにあなたのアイデアが入ります]";
+            
+            const finalPrompt = basePromptTemplate(ideaContent);
+            document.getElementById('prompt-preview').value = finalPrompt;
+        }
+
+        // コピー処理 (iFrame制限に対応するため、document.execCommand('copy') を使用)
+        function copyPrompt() {
+            const promptTextArea = document.getElementById('prompt-preview');
+            
+            // テキスト領域を選択してコピー
+            promptTextArea.select();
+            promptTextArea.setSelectionRange(0, 99999); // モバイル対応
+
+            let copySuccess = false;
+            try {
+                // iframe内でも確実にコピーできる伝統的な手法
+                copySuccess = document.execCommand('copy');
+            } catch (err) {
+                console.error('コピーに失敗しました:', err);
+            }
+
+            if (copySuccess) {
+                // UI上の変化を演出
+                showSuccessState();
+            } else {
+                // 万が一失敗した場合は、手動でコピーしてもらう案内
+                alert('コピーに失敗しました。プロンプト領域から全選択してコピーしてください。');
+            }
+        }
+
+        // コピー成功時のUIエフェクト
+        function showSuccessState() {
+            const copyIcon = document.getElementById('copy-icon');
+            const checkIcon = document.getElementById('check-icon');
+            const buttonText = document.getElementById('button-text');
+            const toast = document.getElementById('toast');
+
+            // ボタンのアイコンと文言を「完了」に変更
+            copyIcon.classList.add('hidden');
+            checkIcon.classList.remove('hidden');
+            buttonText.textContent = 'コピー完了！';
+
+            // トースト通知を表示
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'bottom-8');
+
+            // 2.5秒後に元に戻す
+            setTimeout(() => {
+                copyIcon.classList.remove('hidden');
+                checkIcon.classList.add('hidden');
+                buttonText.textContent = 'プロンプトをコピーする';
+
+                toast.classList.add('opacity-0', 'pointer-events-none');
+                toast.classList.remove('opacity-100', 'bottom-8');
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
